@@ -1,10 +1,10 @@
 Package: stat404
 Title: Package for UBC STAT 404
-Version: 0.0.0.9200
+Version: 0.0.1.0000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Caden", "Hewlett", , "thetroutmanishere@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: Contains section-wise functions for the UBC STAT 404 course on experimental design and analysis.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a license
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
