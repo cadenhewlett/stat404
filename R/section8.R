@@ -1,7 +1,7 @@
 
 #' Explode Words into Characters
 #'
-#' This function takes a vector of words and splits each word into its constituent characters.
+#' A function that takes a vector of words and splits each word into its constituent characters. Used in the defining of contrast subgroups.
 #'
 #' @param words A character vector, where each element is a word that you want to split into characters.
 #' @return A list where each element is a character vector corresponding to the characters of a word.
