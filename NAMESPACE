@@ -2,6 +2,7 @@
 
 export(explode_word)
 export(generate_interaction_plot)
+export(generate_normal_plot)
 export(generate_planning_matrix)
 export(multiply_words)
 import(ggplot2)
