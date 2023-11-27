@@ -1,6 +1,6 @@
 # stat404 R Package
 
-Welcome to the `stat404` R package, designed for the UBC STAT 404 course on experimental design and statistical analysis. This package contains a set of functions tailored to help students and practitioners in the field of statistics with their coursework and analyses.
+Welcome to the `stat404` R package, designed for the UBC STAT 404 course on experimental design and statistical analysis. This package contains a set of functions tailored to help students with their coursework and analyses. The aim of this supplementary module is to help students get a better understanding of the course material. Eventually, the goal is to add comparison tools so that students may test their own code against the Course Package Code in this repository.
 
 ## Course Sections
 - Section 1: 🚧 In Progress
