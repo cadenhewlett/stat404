@@ -258,3 +258,106 @@ generate_normal_plot <- function(y, half_normal = FALSE, plus = FALSE){
     theme(panel.grid.minor = element_line(color = "grey60", linewidth = 0.2, linetype = "dotted"))
   return(g)
 }
+
+
+#' Full Factorial Design ANOVA
+#'
+#' This function performs a full factorial design ANOVA on experimental data with a high/low design.
+#'
+#' @param df A data frame representing a full factorial experimental design. Each column represents a factor with
+#' two levels (-1 and 1), and each row represents an experimental run.
+#' @param alpha The significance level (alpha) used for hypothesis testing. The default value is 0.05.
+#' @param plus_first Logical; if TRUE, uses positive-first ordering in generating the planning matrix for the ANOVA analysis.
+#'        This parameter is passed to \code{\link{generate_planning_matrix}}.
+#' @return A data frame representing the ANOVA table with columns for source, degrees of freedom (DF), sum of squares (SS),
+#' mean sum of squares (MSS), F-statistics (F), p-values (P), and a significance indicator (signif) for each source.
+#' The table includes sources for each combination of factor levels, error, and total.
+#' @seealso \code{\link{generate_planning_matrix}} for the function used to generate the planning matrix.
+#' @examples
+#' # Create a data frame with response data for two factors
+#' data <- data.frame(
+#'   High = c(30, 40, 35, 45, 38, 50, 23, 28),
+#'   Low = c(20, 25, 22, 30, 28, 35, 20, 25)
+#' )
+#' # Perform a full factorial ANOVA
+#' full_factorial(data)
+#'
+#' @export
+full_factorial <- function(df, alpha = 0.05, plus_first = FALSE) {
+  # Input validation: Check if df is a data frame with at least two columns
+  if (!is.data.frame(df) || ncol(df) < 2) {
+    stop("The input 'df' should be a data frame with at least two columns representing experimental runs at high and low treatment levels.")
+  }
+
+  # Check if the two response columns are equal-length
+  if (nrow(df) > 0 && length(df[[1]]) != length(df[[2]])) {
+    stop("The two response columns in 'df' must have the same length.")
+  }
+  # normally this is 2 or 1
+  n = ncol(df)
+  # find the number of treatments from input data size
+  k = log(nrow(df), base = 2) # 2^k groups, rearranged
+  # generate planning matrix with our function
+  plan_mat = generate_planning_matrix(k, plus_first = plus_first)
+  # store combination names
+  combos <- colnames(plan_mat)
+  # append row-wise means of df
+  plan_mat[, "Means"] = rowMeans(df)
+  # store in new variable
+  dfp = plan_mat
+  # generate the estimates
+  estimates <- data.frame(combos, mu_hat = unlist(lapply(combos,
+                                                         function(c) { mean(dfp$Means[dfp[, c] == 1] - dfp$Means[dfp[, c] == -1])})))
+  # find the sum of squares
+  estimates$ssq <- (n*(2^(k-2)))*(estimates$mu_hat)^2
+  # find grand mean (for estimation)
+  eta_hat = mean(unlist(df))
+  # make empty matrix for predictions
+  preds <- matrix(0, 2^k, 1)
+  # make a planning matrix again, to restore order of signs
+  signs <- generate_planning_matrix(k, FALSE)
+
+  # generate all predictions (same as y_{i.} but whatevs)
+  for (i in 1:nrow(signs)){
+    preds[i] = eta_hat + sum(0.5*(as.numeric(signs[i, ]) * estimates$mu_hat))
+  }
+
+  # create empty matrix for residuals
+  r = matrix(0, 2^k, n)
+  # create empty matrix for sum of squares tot
+  s = matrix(0, 2^k, n)
+  # for every row
+  for (i in 1:(2^k)){
+    # and every column
+    for (j in 1:n){
+      # compute the (i,j) residual
+      r[i,j] =  df[i,j] - preds[i]
+      # compute the (i,j) sum of squares
+      s[i,j] = df[i,j] - eta_hat
+    }
+  }
+  # then sserr is RSS
+  sserr = sum(r^2)
+  # then sstot is sum of squared differences
+  sstot = sum(s^2)
+  # then our estimates sum of squares + RSS should be total
+  sstot == (sum(estimates$ssq) + sserr)
+  # the we find the degrees of freedom
+  dfs <- c(rep(1, times = length(combos)))
+  # and the per-df sum of squares
+  mss_vals <- estimates$ssq/dfs
+  msserr <- sserr / ((2^k) * (n - 1))
+  # and compute the f-stats
+  f_vals <- mss_vals / msserr
+  # finally, construct the anova table
+  anovatbl <- data.frame(
+    Source = c(combos, "Error", "Total"),
+    DF = c(dfs, (2^k) * (n - 1), (n * 2^k)-1),
+    SS = round(c(estimates$ssq, sserr, sstot), 2),
+    MSS = round(c(mss_vals, msserr, NA), 3),
+    F = c(round(f_vals, 2), NA, NA),
+    P = c(signif(pf(f_vals, 1, (2^k) * (n - 1), lower.tail = FALSE), 3), NA, NA)
+  )
+  anovatbl <- cbind(anovatbl, signif = anovatbl$P < alpha)
+  return(anovatbl)
+}
