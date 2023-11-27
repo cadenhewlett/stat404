@@ -13,7 +13,7 @@ explode_word(words)
 A list where each element is a character vector corresponding to the characters of a word.
 }
 \description{
-This function takes a vector of words and splits each word into its constituent characters.
+A function that takes a vector of words and splits each word into its constituent characters. Used in the defining of contrast subgroups.
 }
 \examples{
 explode_word(c("tomato"))
