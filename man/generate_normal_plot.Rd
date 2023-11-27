@@ -27,8 +27,8 @@ quantiles of the standard normal distribution.
 }
 \examples{
 # Create dummy data
-set.seed(123)
-dummy_y <- rnorm(8)
+set.seed(404)
+dummy_y <- rnorm(2^4)
 
 # Generate a normal plot
 generate_normal_plot(dummy_y)
