@@ -147,8 +147,8 @@ generate_interaction_plot <- function(int1, int2, df){
 #' @seealso \code{\link{generate_planning_matrix}} for the function used to generate the planning matrix.
 #' @examples
 #' # Create dummy data
-#' set.seed(123)
-#' dummy_y <- rnorm(8)
+#' set.seed(404)
+#' dummy_y <- rnorm(2^4)
 #'
 #' # Generate a normal plot
 #' generate_normal_plot(dummy_y)
