@@ -25,7 +25,10 @@ analysis or fractional factorial designs.
 \examples{
 IA = c("1235", "1246", "12347")
 all_contrast_subgroups(explode_word(IA))
+# will return inputs, I, and then ABCD x ABED = CE,
+all_contrast_subgroups(list( c("A", "B", "C", "D"), c("A", "B", "E", "D")))
+
 }
 \seealso{
-\code{\link{explode_word}} for the function used to generate the planning matrix.
+\code{\link{explode_word}} for translating lists of words into letters.
 }
