@@ -11,7 +11,7 @@ Welcome to the `stat404` R package, designed for the UBC STAT 404 course on expe
 - Section 6: 🚧 In Progress
 - Section 7: ✅ Complete (Full Factorial ANOVA)
 - Section 8: 🚧 In Progress
-
+- Section 10: ✅ Complete (ANCOVA)
 Stay tuned as we work on completing the remaining sections and enhancing the package's capabilities for your statistical journey!
 
 ## Installation
